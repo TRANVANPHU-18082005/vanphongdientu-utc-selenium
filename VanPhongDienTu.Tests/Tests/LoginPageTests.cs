@@ -81,4 +81,17 @@ public class LoginPageTests : BaseTest
         Assert.That(Driver.FindElement(ForgotPasswordPage.SubmitButton).GetAttribute("value"), Is.EqualTo("Cập nhật"));
         Assert.That(Driver.FindElement(ForgotPasswordPage.CaptchaImage).Displayed, Is.True);
     }
+
+    [Test]
+    [Description("TC09 - Link dang nhap bang e-mail UTC tro toi Google OAuth")]
+    public void TC09_GoogleLoginLink_ShouldPointToGoogleOAuth()
+    {
+        new LoginPage(Driver).Open();
+        var href = Driver.FindElement(LoginPage.GoogleLoginLink).GetAttribute("href") ?? string.Empty;
+
+        Assert.That(Driver.FindElement(LoginPage.GoogleLoginLink).Text.Trim(), Is.EqualTo("Đăng nhập bằng e-mail UTC"));
+        Assert.That(href, Does.Contain("accounts.google.com"));
+        Assert.That(href, Does.Contain("oauth2"));
+        Assert.That(href, Does.Contain("vanphongdientu.utc.edu.vn"));
+    }
 }
