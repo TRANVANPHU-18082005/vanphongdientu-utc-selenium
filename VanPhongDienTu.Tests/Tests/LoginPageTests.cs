@@ -66,4 +66,19 @@ public class LoginPageTests : BaseTest
         loginPage.ToggleKeepMeSignedIn();
         Assert.That(loginPage.IsKeepMeSignedInChecked(), Is.True);
     }
+
+    [Test]
+    [Description("TC06 - Chuyen sang trang quen mat khau")]
+    public void TC06_ClickForgotPassword_ShouldOpenGetPassPage()
+    {
+        var loginPage = new LoginPage(Driver).Open();
+        loginPage.ClickForgotPassword();
+
+        Assert.That(Driver.Url, Does.Contain("/Login/GetPass").Or.Contain("/Login/Getpass"));
+        Assert.That(Driver.Title, Is.EqualTo("Lấy lại mật khẩu"));
+        Assert.That(Driver.FindElement(ForgotPasswordPage.CaptchaInput).GetAttribute("placeholder"), Is.EqualTo("Mã bảo mật"));
+        Assert.That(Driver.FindElement(ForgotPasswordPage.EmailInput).GetAttribute("placeholder"), Is.EqualTo("Địa chỉ Email"));
+        Assert.That(Driver.FindElement(ForgotPasswordPage.SubmitButton).GetAttribute("value"), Is.EqualTo("Cập nhật"));
+        Assert.That(Driver.FindElement(ForgotPasswordPage.CaptchaImage).Displayed, Is.True);
+    }
 }
