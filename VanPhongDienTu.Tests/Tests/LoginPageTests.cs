@@ -55,4 +55,15 @@ public class LoginPageTests : BaseTest
         Assert.That(loginPage.GetErrorText(), Is.EqualTo("Tài khoản hoặc mật khẩu không đúng."));
         Assert.That(Driver.Url, Does.Contain("/Login"));
     }
+
+    [Test]
+    [Description("TC05 - Tick checkbox Giu toi luon dang nhap")]
+    public void TC05_ToggleKeepMeSignedIn_ShouldCheckPersistentCheckbox()
+    {
+        var loginPage = new LoginPage(Driver).Open();
+
+        Assert.That(loginPage.IsKeepMeSignedInChecked(), Is.False);
+        loginPage.ToggleKeepMeSignedIn();
+        Assert.That(loginPage.IsKeepMeSignedInChecked(), Is.True);
+    }
 }
