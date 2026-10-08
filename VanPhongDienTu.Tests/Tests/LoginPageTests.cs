@@ -42,4 +42,17 @@ public class LoginPageTests : BaseTest
         Assert.That(loginPage.GetErrorText(), Is.EqualTo("Bạn chưa nhập mật khẩu"));
         Assert.That(Driver.Url, Does.Contain("/Login"));
     }
+
+    [Test]
+    [Description("TC04 - Dang nhap voi tai khoan hoac mat khau khong dung")]
+    public void TC04_LoginWithInvalidCredentials_ShouldShowInvalidAccountError()
+    {
+        var loginPage = new LoginPage(Driver).Open();
+        loginPage.EnterUsername("invalid_user_xyz");
+        loginPage.EnterPassword("wrong_password_xyz");
+        loginPage.ClickLogin();
+
+        Assert.That(loginPage.GetErrorText(), Is.EqualTo("Tài khoản hoặc mật khẩu không đúng."));
+        Assert.That(Driver.Url, Does.Contain("/Login"));
+    }
 }
