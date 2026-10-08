@@ -2,20 +2,26 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 
-namespace VanPhongDienTu.Tests.Helpers;
+namespace VanPhongDienTu.Tests.Base;
 
 public static class DriverFactory
 {
     public static IWebDriver Create()
     {
         var browser = (Environment.GetEnvironmentVariable("BROWSER") ?? "chrome").ToLowerInvariant();
-        var headless = string.Equals(Environment.GetEnvironmentVariable("HEADLESS"), "true", StringComparison.OrdinalIgnoreCase);
+        var headless = string.Equals(
+            Environment.GetEnvironmentVariable("HEADLESS"),
+            "true",
+            StringComparison.OrdinalIgnoreCase);
 
-        return browser switch
+        try
         {
-            "edge" => CreateEdge(headless),
-            _ => CreateChrome(headless)
-        };
+            return browser == "edge" ? CreateEdge(headless) : CreateChrome(headless);
+        }
+        catch (Exception) when (browser != "edge")
+        {
+            return CreateEdge(headless);
+        }
     }
 
     private static IWebDriver CreateChrome(bool headless)

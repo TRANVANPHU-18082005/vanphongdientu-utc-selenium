@@ -1,13 +1,11 @@
+using Allure.Net.Commons;
 using OpenQA.Selenium;
 using VanPhongDienTu.Tests.Config;
-using VanPhongDienTu.Tests.Helpers;
 
 namespace VanPhongDienTu.Tests.Pages;
 
-public class ForgotPasswordPage
+public class ForgotPasswordPage : BasePage
 {
-    private readonly IWebDriver _driver;
-
     public static readonly By CaptchaImage = By.CssSelector("img[src='/login/index/captcha']");
     public static readonly By CaptchaInput = By.Name("captcha");
     public static readonly By EmailInput = By.Name("email");
@@ -17,49 +15,50 @@ public class ForgotPasswordPage
     public static readonly By Logo = By.CssSelector("img.logo");
     public static readonly By Heading = By.CssSelector("h1");
 
-    public ForgotPasswordPage(IWebDriver driver)
+    public ForgotPasswordPage(IWebDriver driver) : base(driver)
     {
-        _driver = driver;
     }
 
     public ForgotPasswordPage Open()
     {
-        _driver.Navigate().GoToUrl(TestSettings.ForgotPasswordUrl);
-        WaitHelpers.WaitVisible(_driver, CaptchaInput);
+        AllureApi.Step("Mo trang lay lai mat khau", () =>
+        {
+            Driver.Navigate().GoToUrl(TestSettings.ForgotPasswordUrl);
+            WaitVisible(CaptchaInput);
+        });
         return this;
     }
 
     public ForgotPasswordPage EnterCaptcha(string captcha)
     {
-        var input = WaitHelpers.WaitVisible(_driver, CaptchaInput);
-        input.Clear();
-        input.SendKeys(captcha);
+        AllureApi.Step($"Nhap ma bao mat: {captcha}", () => Type(CaptchaInput, captcha));
         return this;
     }
 
     public ForgotPasswordPage EnterEmail(string email)
     {
-        var input = WaitHelpers.WaitVisible(_driver, EmailInput);
-        input.Clear();
-        input.SendKeys(email);
+        AllureApi.Step($"Nhap email: {email}", () => Type(EmailInput, email));
         return this;
     }
 
     public ForgotPasswordPage ClickSubmit()
     {
-        WaitHelpers.WaitVisible(_driver, SubmitButton).Click();
+        AllureApi.Step("Bam nut Cap nhat", () => Click(SubmitButton));
         return this;
     }
 
     public string GetErrorText()
     {
-        return WaitHelpers.WaitVisible(_driver, ErrorMessage).Text.Trim();
+        return GetText(ErrorMessage);
     }
 
     public LoginPage ClickBackToLogin()
     {
-        WaitHelpers.WaitVisible(_driver, BackToLoginLink).Click();
-        WaitHelpers.WaitVisible(_driver, LoginPage.UsernameInput);
-        return new LoginPage(_driver);
+        AllureApi.Step("Bam Tro lai dang nhap", () =>
+        {
+            Click(BackToLoginLink);
+            WaitVisible(LoginPage.UsernameInput);
+        });
+        return new LoginPage(Driver);
     }
 }

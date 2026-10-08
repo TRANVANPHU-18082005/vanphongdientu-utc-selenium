@@ -18,6 +18,10 @@ TestResults/
 chromedriver.exe
 *.log
 
+## Allure
+allure-results/
+allure-report/
+
 ## OS
 Thumbs.db
 Desktop.ini

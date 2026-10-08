@@ -1,13 +1,11 @@
+using Allure.Net.Commons;
 using OpenQA.Selenium;
 using VanPhongDienTu.Tests.Config;
-using VanPhongDienTu.Tests.Helpers;
 
 namespace VanPhongDienTu.Tests.Pages;
 
-public class LoginPage
+public class LoginPage : BasePage
 {
-    private readonly IWebDriver _driver;
-
     public static readonly By UsernameInput = By.Name("username");
     public static readonly By PasswordInput = By.Name("userpwd");
     public static readonly By PersistentCheckbox = By.Id("persistent");
@@ -23,60 +21,61 @@ public class LoginPage
     public static readonly By Copyright = By.CssSelector(".footer .left span.a");
     public static readonly By LoginForm = By.CssSelector("form[action='/Login']");
 
-    public LoginPage(IWebDriver driver)
+    public LoginPage(IWebDriver driver) : base(driver)
     {
-        _driver = driver;
     }
 
     public LoginPage Open()
     {
-        _driver.Navigate().GoToUrl(TestSettings.LoginUrl);
-        WaitHelpers.WaitVisible(_driver, UsernameInput);
+        AllureApi.Step("Mo trang dang nhap", () =>
+        {
+            Driver.Navigate().GoToUrl(TestSettings.LoginUrl);
+            WaitVisible(UsernameInput);
+        });
         return this;
     }
 
     public LoginPage EnterUsername(string username)
     {
-        var input = WaitHelpers.WaitVisible(_driver, UsernameInput);
-        input.Clear();
-        input.SendKeys(username);
+        AllureApi.Step($"Nhap ten dang nhap: {username}", () => Type(UsernameInput, username));
         return this;
     }
 
     public LoginPage EnterPassword(string password)
     {
-        var input = WaitHelpers.WaitVisible(_driver, PasswordInput);
-        input.Clear();
-        input.SendKeys(password);
+        AllureApi.Step("Nhap mat khau", () => Type(PasswordInput, password));
         return this;
     }
 
     public LoginPage ClickLogin()
     {
-        WaitHelpers.WaitVisible(_driver, LoginButton).Click();
+        AllureApi.Step("Bam nut Dang nhap", () => Click(LoginButton));
         return this;
     }
 
     public LoginPage ToggleKeepMeSignedIn()
     {
-        WaitHelpers.WaitVisible(_driver, PersistentLabel).Click();
+        AllureApi.Step("Tick Giu toi luon dang nhap", () => Click(PersistentLabel));
         return this;
     }
 
     public bool IsKeepMeSignedInChecked()
     {
-        return _driver.FindElement(PersistentCheckbox).Selected;
+        return Driver.FindElement(PersistentCheckbox).Selected;
     }
 
     public string GetErrorText()
     {
-        return WaitHelpers.WaitVisible(_driver, ErrorMessage).Text.Trim();
+        return GetText(ErrorMessage);
     }
 
     public ForgotPasswordPage ClickForgotPassword()
     {
-        WaitHelpers.WaitVisible(_driver, ForgotPasswordLink).Click();
-        WaitHelpers.WaitUrlContains(_driver, "/Login/GetPass");
-        return new ForgotPasswordPage(_driver);
+        AllureApi.Step("Bam link quen mat khau", () =>
+        {
+            Click(ForgotPasswordLink);
+            WaitUrlContains("/Login/GetPass");
+        });
+        return new ForgotPasswordPage(Driver);
     }
 }
