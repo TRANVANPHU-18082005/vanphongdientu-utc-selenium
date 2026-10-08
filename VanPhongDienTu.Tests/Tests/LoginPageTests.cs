@@ -19,4 +19,15 @@ public class LoginPageTests : BaseTest
         Assert.That(Driver.FindElement(LoginPage.Heading).Text, Is.EqualTo("Không chỉ là một giải pháp quản lý"));
         Assert.That(Driver.FindElement(LoginPage.ForgotPasswordLink).Displayed, Is.True);
     }
+
+    [Test]
+    [Description("TC02 - Dang nhap khi bo trong ten dang nhap")]
+    public void TC02_LoginWithEmptyUsername_ShouldShowUsernameRequiredError()
+    {
+        var loginPage = new LoginPage(Driver).Open();
+        loginPage.ClickLogin();
+
+        Assert.That(loginPage.GetErrorText(), Is.EqualTo("Bạn chưa nhập tên đăng nhập"));
+        Assert.That(Driver.Url, Does.Contain("/Login"));
+    }
 }
