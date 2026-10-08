@@ -94,4 +94,20 @@ public class LoginPageTests : BaseTest
         Assert.That(href, Does.Contain("oauth2"));
         Assert.That(href, Does.Contain("vanphongdientu.utc.edu.vn"));
     }
+
+    [Test]
+    [Description("TC10 - Link Trung tam tro giup va Y kien phan hoi")]
+    public void TC10_FooterLinks_ShouldPointToHelpCenterAndFeedbackMail()
+    {
+        new LoginPage(Driver).Open();
+        var help = Driver.FindElement(LoginPage.HelpCenterLink);
+        var feedback = Driver.FindElement(LoginPage.FeedbackLink);
+
+        Assert.That(help.Text.Trim(), Is.EqualTo("Trung tâm trợ giúp"));
+        Assert.That(help.GetAttribute("href"), Does.StartWith("http://hotrokythuat.utc.edu.vn"));
+        Assert.That(help.GetAttribute("target"), Is.EqualTo("_blank"));
+        Assert.That(feedback.Text.Trim(), Is.EqualTo("Ý kiến phản hồi"));
+        Assert.That(feedback.GetAttribute("href"), Is.EqualTo("mailto:hotrokythuat@utc.edu.vn"));
+        Assert.That(Driver.FindElement(LoginPage.Copyright).Text, Does.Contain("Trường ĐH Giao Thông Vận Tải"));
+    }
 }
